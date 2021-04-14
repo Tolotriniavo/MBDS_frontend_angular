@@ -3,8 +3,10 @@ import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, filter, map, tap } from 'rxjs/operators';
 import { Assignment } from '../assignments/assignment.model';
+import { Matiere} from '../matieres/matieres.model';
 import { LoggingService } from './logging.service';
 import { assignmentsGeneres } from './data';
+import { MatieresService} from './matieres.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +14,10 @@ import { assignmentsGeneres } from './data';
 export class AssignmentsService {
   assignments:Assignment[];
 
-  constructor(private loggingService:LoggingService, private http:HttpClient) { }
+  constructor(private loggingService:LoggingService, private http:HttpClient, private matiereService:MatieresService) { }
 
   //uri = "http://localhost:8010/api/assignments";
-  uri = "https://backendmbds.herokuapp.com/api/assignments"
+  uri = "http://localhost:8010/api/assignments";
 
   getAssignments():Observable<Assignment[]> {
     console.log("Dans le service de gestion des assignments...")

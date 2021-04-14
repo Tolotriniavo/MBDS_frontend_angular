@@ -14,6 +14,7 @@ import {MatListModule} from '@angular/material/list';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatTabsModule} from '@angular/material/tabs';
 import {MatStepperModule} from '@angular/material/stepper';
 
 
@@ -67,7 +68,7 @@ const routes:Routes = [
     EditAssigmentComponent
   ],
   imports: [
-    BrowserModule,
+    BrowserModule,MatTabsModule,
     BrowserAnimationsModule,MatSelectModule,
     FormsModule,ReactiveFormsModule,
     MatButtonModule, MatDividerModule, MatIconModule,

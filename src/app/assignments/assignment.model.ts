@@ -8,4 +8,8 @@ export class Assignment {
   matiereId: string;
   note: Number;
   remarque: string;
+  matiereImage: string;
+  profImage: string;
+  nomProf: string;
+  nomMatiere: string;
 }

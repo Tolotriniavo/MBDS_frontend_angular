@@ -13,10 +13,14 @@ export class MatieresService {
   constructor(private loggingService:LoggingService, private http:HttpClient) { }
 
   //uri = "http://localhost:8010/api/assignments";
-  uri = "https://backendmbds.herokuapp.com/api/matieres"
+  uri = "http://localhost:8010/api/matieres"
 
   getMatieres():Observable<Matiere[]> {
     return this.http.get<Matiere[]>(this.uri);
+  }
+
+  getMatiere(id:string):Observable<Matiere> {
+    return this.http.get<Matiere>(this.uri + "/" + id);
   }
  
 }

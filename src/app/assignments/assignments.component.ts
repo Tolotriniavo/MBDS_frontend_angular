@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AssignmentsService } from '../shared/assignments.service';
+import { MatieresService } from '../shared/matieres.service';
 import { Assignment } from './assignment.model';
+import { Matiere} from '../matieres/matieres.model';
 
 @Component({
   selector: 'app-assignments',
@@ -9,7 +11,10 @@ import { Assignment } from './assignment.model';
   styleUrls: ['./assignments.component.css'],
 })
 export class AssignmentsComponent implements OnInit {
-  assignments:Assignment[];
+  assignments:Assignment[]=[];
+  assignmentsRendu:Assignment[]=[];
+  assignmentsNonRendu:Assignment[]=[];
+  matieres:Matiere[];
   page: number=1;
   limit: number=10;
   totalDocs: number;
@@ -22,7 +27,8 @@ export class AssignmentsComponent implements OnInit {
   // on injecte le service de gestion des assignments
   constructor(private assignmentsService:AssignmentsService,
               private route:ActivatedRoute,
-              private router:Router) {}
+              private router:Router,
+              private matieresService:MatieresService) {}
 
   ngOnInit() {
     console.log('AVANT AFFICHAGE');
@@ -32,15 +38,46 @@ export class AssignmentsComponent implements OnInit {
       this.page = +queryParams.page || 1;
       this.limit = +queryParams.limit || 10;
 
-      this.getAssignments();
+      this.getMatieresAndAssignments();
     });
       console.log("getAssignments() du service appelé");
   }
 
-  getAssignments() {
+  getMatieresAndAssignments(){
+    this.matieresService.getMatieres().subscribe(
+      data =>{
+        this.getAssignments(data);
+      }
+    );
+  }
+
+  getAssignments(matieres) {
     this.assignmentsService.getAssignmentsPagine(this.page, this.limit)
     .subscribe(data => {
-      this.assignments = data.docs;
+      let assignmentsTemp= [];
+      this.assignments = [];
+      this.assignmentsRendu = [];
+      this.assignmentsNonRendu = [];
+      assignmentsTemp = data.docs;
+      console.log("taille"+assignmentsTemp.length);
+      for(let i=0;i<assignmentsTemp.length;i++){
+        
+          for(let x=0;x<matieres.length;x++){
+            if(assignmentsTemp[i].matiereId==matieres[x]._id){
+              assignmentsTemp[i].matiereImage = matieres[x].image;
+              assignmentsTemp[i].profImage = matieres[x].imageProf;
+              console.log("matiere image"+matieres[x].image);
+            }
+          }
+          if(assignmentsTemp[i].rendu){
+            this.assignmentsRendu.push(assignmentsTemp[i]);
+          }
+          else{
+            this.assignmentsNonRendu.push(assignmentsTemp[i]);
+          }
+      }
+      
+     
       this.page = data.page;
       this.limit = data.limit;
       this.totalDocs = data.totalDocs;
@@ -53,6 +90,10 @@ export class AssignmentsComponent implements OnInit {
     });
   }
 
+  
+
+  
+
   onDeleteAssignment(event) {
     // event = l'assignment à supprimer
 
@@ -64,6 +105,8 @@ export class AssignmentsComponent implements OnInit {
   }
 
   premierePage() {
+
+    
     this.router.navigate(['/home'], {
       queryParams: {
         page:1,
