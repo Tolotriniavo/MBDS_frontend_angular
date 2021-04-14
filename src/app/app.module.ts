@@ -18,6 +18,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatStepperModule} from '@angular/material/stepper';
 
 
+
 import { AssignmentsComponent } from './assignments/assignments.component';
 import { RenduDirective } from './shared/rendu.directive';
 import { NonRenduDirective } from './shared/non-rendu.directive';
@@ -29,6 +30,10 @@ import { EditAssigmentComponent } from './assignments/edit-assigment/edit-assigm
 import { AuthGuard } from './shared/auth.guard';
 import { HttpClientModule } from '@angular/common/http';
 import {MatSelectModule} from '@angular/material/select';
+import { LoginComponent } from './login/login.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import { ModalModule } from './_modal';
 
 
 const routes:Routes = [
@@ -48,6 +53,10 @@ const routes:Routes = [
     component:AddAssignmentComponent
   },
   {
+    path:"login",
+    component:LoginComponent
+  },
+  {
     path:"assignment/:id",
     component:AssignmentDetailComponent
   },
@@ -65,16 +74,17 @@ const routes:Routes = [
     NonRenduDirective,
     AssignmentDetailComponent,
     AddAssignmentComponent,
-    EditAssigmentComponent
+    EditAssigmentComponent,
+    LoginComponent
   ],
   imports: [
-    BrowserModule,MatTabsModule,
+    BrowserModule,MatTabsModule,MatSnackBarModule,
     BrowserAnimationsModule,MatSelectModule,
     FormsModule,ReactiveFormsModule,
     MatButtonModule, MatDividerModule, MatIconModule,
     MatFormFieldModule, MatInputModule, MatDatepickerModule,
     MatNativeDateModule, MatListModule, MatCardModule,MatStepperModule, MatCheckboxModule,
-    MatSlideToggleModule,
+    MatSlideToggleModule,DragDropModule,ModalModule,
     RouterModule.forRoot(routes), HttpClientModule
   ],
   providers: [],

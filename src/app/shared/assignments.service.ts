@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, filter, map, tap } from 'rxjs/operators';
@@ -17,7 +17,7 @@ export class AssignmentsService {
   constructor(private loggingService:LoggingService, private http:HttpClient, private matiereService:MatieresService) { }
 
   //uri = "http://localhost:8010/api/assignments";
-  uri = "http://localhost:8010/api/assignments";
+  uri = "https://backendmbds.herokuapp.com/api/assignments";
 
   getAssignments():Observable<Assignment[]> {
     console.log("Dans le service de gestion des assignments...")
@@ -38,7 +38,7 @@ export class AssignmentsService {
     return this.http.get<Assignment[]>(this.uri).toPromise();
   }
 
-  getAssignment(id:number):Observable<Assignment> {
+  getAssignment(id:any):Observable<Assignment> {
     //let assignementCherche = this.assignments.find(a => a.id === id);
 
     //return of(assignementCherche);
@@ -96,7 +96,7 @@ export class AssignmentsService {
     //console.log("updateAssignment l'assignment passé en param est à la position " + index + " du tableau");
     this.loggingService.log(assignment.nom, " a été modifié");
 
-    return this.http.put(this.uri, assignment);
+    return this.http.put(this.uri, assignment,{headers: new HttpHeaders({'x-access-token': localStorage.getItem("currentToken")})});
   }
 
   deleteAssignment(assignment:Assignment):Observable<any> {

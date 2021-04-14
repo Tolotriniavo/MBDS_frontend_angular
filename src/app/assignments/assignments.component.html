@@ -29,10 +29,11 @@
 
         <mat-tab label="Rendu">
 
+         
           <mat-list *ngFor="let a of assignmentsRendu">
-            <mat-card class="example-card">
+            <mat-card class="example-card col-md-12">
               <mat-card-header>
-                <div mat-card-avatar [ngStyle]="{'background-image': 'url(/assets/img/' +a.profImage+')','background-size': 'cover'}"></div>
+                <div *ngIf="a.matiereImage != null" mat-card-avatar [ngStyle]="{'background-image': 'url(/assets/img/' +a.profImage+')','background-size': 'cover'}"></div>
                 <mat-card-title>{{a.nom}}</mat-card-title>
                 <mat-card-subtitle>{{a.auteur}}</mat-card-subtitle>
               </mat-card-header>
@@ -61,16 +62,26 @@
               </mat-card-actions>
             </mat-card>
           </mat-list>
+        
 
         </mat-tab>
       
 
         <mat-tab label="Non Rendu">
 
-          <mat-list *ngFor="let a of assignmentsNonRendu">
-            <mat-card class="example-card">
+         
+          <div
+          cdkDropList
+          #todoList="cdkDropList"
+          [cdkDropListData]="assignmentsNonRendu"
+          [cdkDropListConnectedTo]="[doneList]"
+          class="example-list"
+          >
+          <mat-list 
+         *ngFor="let a of assignmentsNonRendu"  >
+            <mat-card class="example-card" cdkDrag>
               <mat-card-header>
-                <div mat-card-avatar [ngStyle]="{'background-image': 'url(/assets/img/' +a.profImage+')','background-size': 'cover'}"></div>
+                <div *ngIf="a.matiereImage != null" mat-card-avatar [ngStyle]="{'background-image': 'url(/assets/img/' +a.profImage+')','background-size': 'cover'}"></div>
                 <mat-card-title>{{a.nom}}</mat-card-title>
                 <mat-card-subtitle>{{a.auteur}}</mat-card-subtitle>
               </mat-card-header>
@@ -99,6 +110,7 @@
               </mat-card-actions>
             </mat-card>
           </mat-list>
+          </div>
 
          
         </mat-tab>
@@ -107,6 +119,57 @@
 
     
 
+      <h2>Done</h2>
+      <div
+      cdkDropList
+      #doneList="cdkDropList"
+      [cdkDropListData]="done"
+      [cdkDropListConnectedTo]="[todoList]"
+      class="example-list"
+      (cdkDropListDropped)="drop($event)">
+      <mat-list *ngFor="let item of done">
+        <mat-card class="example-card" cdkDrag>
+          <mat-card-header>
+            <div *ngIf="item.matiereImage != null" mat-card-avatar [ngStyle]="{'background-image': 'url(/assets/img/' +a.profImage+')','background-size': 'cover'}"></div>
+            <mat-card-title>{{item.nom}}</mat-card-title>
+            <mat-card-subtitle>{{item.auteur}}</mat-card-subtitle>
+          </mat-card-header>
+          <div *ngIf="item.matiereImage != null">
+            <img mat-card-image src="/assets/img/{{a.matiereImage}}" alt="Photo of a Shiba Inu">
+          </div>
+          <mat-card-content>
+            <p>
+              {{item.remarque}}
+            </p>
+            <p *ngIf="item.rendu; else nonsoumis" appRendu>
+              {{item.nom}}, rendu par l'élève.
+            </p>
+            <ng-template #nonsoumis>
+              <p appNonRendu>
+                {{item.nom}}, non encore rendu par l'élève.
+              </p>
+            </ng-template>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button> <a routerLink="/assignment/{{item.id}}">
+              <h3 mat-subheader>Detail
+              </h3>
+    
+            </a></button>
+          </mat-card-actions>
+        </mat-card>
+ 
+    </mat-list></div>
 
  
 </main>
+
+<jw-modal id="custom-modal-1">
+  <h1>Modifier note de {{nomDevoirAModifier}}</h1>
+  <p>Home page text: <input type="number" [(ngModel)]="note" /></p>
+  <button (click)="closeModal('custom-modal-1');">Close</button>
+  <button (click)="valider();">Valider la note</button>
+</jw-modal>
+
+
+

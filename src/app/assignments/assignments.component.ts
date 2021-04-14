@@ -4,6 +4,8 @@ import { AssignmentsService } from '../shared/assignments.service';
 import { MatieresService } from '../shared/matieres.service';
 import { Assignment } from './assignment.model';
 import { Matiere} from '../matieres/matieres.model';
+import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import { ModalService } from '../_modal';
 
 @Component({
   selector: 'app-assignments',
@@ -23,12 +25,16 @@ export class AssignmentsComponent implements OnInit {
   prevPage: number;
   hasNextPage: boolean;
   nextPage: number;
+  done:Assignment[]=[];
+  note=null;
+  nomDevoirAModifier:string;
+  idDevoirAModifier:string;
 
   // on injecte le service de gestion des assignments
   constructor(private assignmentsService:AssignmentsService,
               private route:ActivatedRoute,
               private router:Router,
-              private matieresService:MatieresService) {}
+              private matieresService:MatieresService,public modalService:ModalService) {}
 
   ngOnInit() {
     console.log('AVANT AFFICHAGE');
@@ -50,6 +56,42 @@ export class AssignmentsComponent implements OnInit {
       }
     );
   }
+
+  drop(event: CdkDragDrop<any>) {
+   
+      transferArrayItem(event.previousContainer.data,
+                        event.container.data,
+                        event.previousIndex,
+                        event.currentIndex);
+                       
+                        this.nomDevoirAModifier = JSON.stringify(event.container.data[event.currentIndex]["nom"]).replace(/['"]+/g, '');
+                        this.idDevoirAModifier = JSON.stringify(event.container.data[event.currentIndex]["id"]).replace(/['"]+/g, '');
+                        console.log("DATAA"+this.idDevoirAModifier);
+                        this.modalService.open('custom-modal-1');
+   
+  }
+
+  valider(){
+    console.log(this.note);
+    
+    this.assignmentsService.getAssignment(this.idDevoirAModifier).subscribe((assignment) => {
+      let assignmentTemp = assignment;
+      assignmentTemp.rendu = true;
+      assignmentTemp.note = this.note;
+      console.log("Nom"+assignmentTemp.nom);
+
+      this.assignmentsService.updateAssignment(assignmentTemp)
+      .subscribe(message => {
+        console.log(message);
+  
+        // et on navigue vers la page d'accueil
+        window.location.reload();
+
+      })
+    
+    });
+  }
+   
 
   getAssignments(matieres) {
     this.assignmentsService.getAssignmentsPagine(this.page, this.limit)
@@ -103,6 +145,11 @@ export class AssignmentsComponent implements OnInit {
         console.log(message);
       })
   }
+
+  closeModal(id: string) {
+    this.modalService.close(id);
+    window.location.reload();
+}
 
   premierePage() {
 
