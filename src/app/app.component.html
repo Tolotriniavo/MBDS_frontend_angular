@@ -24,6 +24,9 @@
       <li class="nav-item d-none d-sm-inline-block">
         <a href="index3.html" class="nav-link">Home</a>
       </li>
+      <li class="droite">
+        <mat-slide-toggle [checked]="isConnected"  (change)="login($event)">Log me!</mat-slide-toggle>
+      </li>
      
     </ul>
 
@@ -70,7 +73,7 @@
          
         
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a  class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>Liste
                 <i class="fas fa-angle-left right"></i>
@@ -78,7 +81,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="pages/examples/invoice.html" class="nav-link">
+                <a routerLink="/" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Assignment</p>
                 </a>
@@ -87,7 +90,7 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a  class="nav-link">
               <i class="nav-icon far fa-plus-square"></i>
               <p>
                 Ajouter
@@ -98,7 +101,7 @@
               
               
               <li class="nav-item">
-                <a href="pages/examples/lockscreen.html" class="nav-link">
+                <a routerLink="/add" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Assignment</p>
                 </a>
@@ -126,8 +129,11 @@
         <nav>
           <a routerLink="/home">{{title}}</a>
         </nav>
+       
+        
+     
       </h1>
-      <mat-slide-toggle [checked]="isConnected"  (change)="login($event)">Log me!</mat-slide-toggle>
+      
       <!--<button mat-stroked-button color="primary" (click)="peuplerBD()">PeuplerBD</button> -->
 <!-- Indique qu'on affichera le composant qui correspond Ã  l'URL courant -->
 <router-outlet></router-outlet>

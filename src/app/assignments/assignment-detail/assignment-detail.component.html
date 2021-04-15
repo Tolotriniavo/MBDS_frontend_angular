@@ -1,6 +1,6 @@
 <div class="container">
   <mat-card *ngIf="assignmentTransmis">
-    <mat-card-title>{{assignmentTransmis.nom}}</mat-card-title>
+    <mat-card-title>{{assignmentTransmis.nom}} et {{assignmentTransmis.matiereImage}}</mat-card-title>
     <mat-card-subtitle>{{assignmentTransmis.dateDeRendu | date}}</mat-card-subtitle>
     <div id="bottom">
       <div *ngIf="assignmentTransmis.note != null ">

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AssignmentsService } from 'src/app/shared/assignments.service';
 import { AuthService } from 'src/app/shared/auth.service';
 import { Assignment } from '../assignment.model';
+import { MatieresService } from '../../shared/matieres.service';
 
 @Component({
   selector: 'app-assignment-detail',
@@ -17,7 +18,8 @@ export class AssignmentDetailComponent implements OnInit {
     private assignmentsService: AssignmentsService,
     private route: ActivatedRoute,
     private router: Router,
-    private authService:AuthService
+    private authService:AuthService,
+    private matieresService:MatieresService
   ) {}
 
   ngOnInit(): void {
@@ -31,7 +33,16 @@ export class AssignmentDetailComponent implements OnInit {
 
     console.log('Dans ngOnInit de details, id = ' + id);
     this.assignmentsService.getAssignment(id).subscribe((assignment) => {
+
       this.assignmentTransmis = assignment;
+      this.matieresService.getMatiere(this.assignmentTransmis.matiereId).subscribe(
+        data=>{
+          this.assignmentTransmis.nomMatiere = data.nom;
+          this.assignmentTransmis.nomProf = data.nomProf;
+          this.assignmentTransmis.matiereImage = data.image;
+          this.assignmentTransmis.profImage = data.imageProf;
+        }
+      )
     });
   }
 

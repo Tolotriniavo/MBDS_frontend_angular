@@ -15,7 +15,7 @@ export class AuthService {
   constructor(private http:HttpClient) {}
   
 
-  uri = "http://localhost:8010/api/user";
+  uri = "https://backendmbds.herokuapp.com/api/user";
 
 
   login(email,password): Observable<any> {

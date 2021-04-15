@@ -3,3 +3,11 @@
   flex-direction: column;
   margin:5px;
 }
+
+.mat{
+  width:400px;
+}
+
+.imageProf{
+  padding-left: 50px;
+}

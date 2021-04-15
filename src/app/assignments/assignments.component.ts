@@ -6,6 +6,7 @@ import { Assignment } from './assignment.model';
 import { Matiere} from '../matieres/matieres.model';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { ModalService } from '../_modal';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-assignments',
@@ -27,8 +28,10 @@ export class AssignmentsComponent implements OnInit {
   nextPage: number;
   done:Assignment[]=[];
   note=null;
+  remarque:string;
   nomDevoirAModifier:string;
   idDevoirAModifier:string;
+  isConnecter:boolean = false;
 
   // on injecte le service de gestion des assignments
   constructor(private assignmentsService:AssignmentsService,
@@ -37,6 +40,12 @@ export class AssignmentsComponent implements OnInit {
               private matieresService:MatieresService,public modalService:ModalService) {}
 
   ngOnInit() {
+    if(localStorage.getItem('currentToken')!=null){
+      this.isConnecter = true;
+    }
+    else{
+      this.isConnecter = false;
+    }
     console.log('AVANT AFFICHAGE');
     // on regarde s'il y a page= et limit = dans l'URL
     this.route.queryParams.subscribe(queryParams => {
@@ -78,6 +87,7 @@ export class AssignmentsComponent implements OnInit {
       let assignmentTemp = assignment;
       assignmentTemp.rendu = true;
       assignmentTemp.note = this.note;
+      assignmentTemp.remarque = this.remarque;
       console.log("Nom"+assignmentTemp.nom);
 
       this.assignmentsService.updateAssignment(assignmentTemp)
@@ -85,7 +95,7 @@ export class AssignmentsComponent implements OnInit {
         console.log(message);
   
         // et on navigue vers la page d'accueil
-        window.location.reload();
+       window.location.reload();
 
       })
     
@@ -108,6 +118,8 @@ export class AssignmentsComponent implements OnInit {
             if(assignmentsTemp[i].matiereId==matieres[x]._id){
               assignmentsTemp[i].matiereImage = matieres[x].image;
               assignmentsTemp[i].profImage = matieres[x].imageProf;
+              assignmentsTemp[i].nomMatiere = matieres[x].nom;
+              assignmentsTemp[i].nomProf = matieres[x].nomProf;
               console.log("matiere image"+matieres[x].image);
             }
           }
@@ -148,7 +160,8 @@ export class AssignmentsComponent implements OnInit {
 
   closeModal(id: string) {
     this.modalService.close(id);
-    window.location.reload();
+    this.assignmentsNonRendu.push(this.done[0]);
+    this.done=[];
 }
 
   premierePage() {

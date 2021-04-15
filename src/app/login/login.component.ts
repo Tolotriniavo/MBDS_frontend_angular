@@ -5,7 +5,7 @@ import { first } from 'rxjs/operators';
 import { AuthService} from '../shared/auth.service';
 import { AppComponent} from '../app.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import { Location } from '@angular/common'
+import { Location } from '@angular/common';
 
 
 //import { AuthenticationService } from '../_services';
