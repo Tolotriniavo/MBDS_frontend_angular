@@ -55,11 +55,10 @@ export class AssignmentsComponent implements AfterViewInit,OnInit {
 ngAfterViewChecked(){
   
   if(localStorage.getItem("apresInsert")){
-    console.log("tafiditra etoooooooooooooooooooooooooooooooo");
-    console.log("taille"+this.assignmentsNonRendu.length);
+   
     setTimeout(() => {
       
-      console.log("AIZA OAAAAAA");
+      
       window.scrollTo(0,document.documentElement.scrollHeight);
      }, 2000);
     
@@ -67,10 +66,15 @@ ngAfterViewChecked(){
   localStorage.removeItem("apresInsert");
 }
               ngAfterViewInit() {
+
+                if(localStorage.getItem("NonRendu")){
+                  this.tabGroup.selectedIndex = 1;
+                }
                 
                 if(localStorage.getItem("apresInsert")=="ok"){
 
                   this.tabGroup.selectedIndex = 1;
+                  localStorage.setItem("NonRendu","d");
                 
                   
                 }
@@ -84,6 +88,17 @@ ngAfterViewChecked(){
                 } catch(err) { }
             }
           
+            onTabChanged(e){
+              
+              if(e.index==0){
+                console.log("tab rendu");
+                localStorage.removeItem("NonRendu");
+              }
+              else{
+                console.log("tab non rendu");
+                localStorage.setItem("NonRendu","d");
+              }
+            }
 
   ngOnInit() {
 
@@ -133,6 +148,8 @@ ngAfterViewChecked(){
                         this.idDevoirAModifier = JSON.stringify(event.container.data[event.currentIndex]["id"]).replace(/['"]+/g, '');
                         console.log("DATAA"+this.idDevoirAModifier);
                         this.modalService.open('custom-modal-1');
+
+                       
    
   }
 
