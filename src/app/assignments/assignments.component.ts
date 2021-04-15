@@ -172,6 +172,7 @@ ngAfterViewChecked(){
         this.assignmentsService.updateAssignment(assignmentTemp)
         .subscribe(message => {
           console.log(message);
+          localStorage.removeItem("NonRendu");
     
           // et on navigue vers la page d'accueil
          window.location.reload();
