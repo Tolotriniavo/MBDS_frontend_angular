@@ -1,27 +1,25 @@
 <main class="container">
   
   <h1>Liste des assignments</h1>
+  
   <mat-divider></mat-divider>
-  <nav>
-    <button mat-raised-button color="primary" (click)="premierePage()">
-      Première
-    </button>
-    <button mat-raised-button color="primary" [disabled]="!hasPrevPage" (click)="pagePrecedente()">
-      Prev
-    </button>
-    <button mat-raised-button color="primary" [disabled]="!hasNextPage" (click)="pageSuivante()">
-      Suiv
-    </button>
-    <button mat-raised-button color="primary" (click)="dernierePage()">
-      Dernière
-    </button>
-  </nav>
+
+  
+  <div class="btn-toolbar" role="toolbar" style="margin: 0;">
+    <div class="btn-group">
+        <button type="button" (click)="premierePage()" class="btn btn-default color-blue"><i style="color:#007bff;" class="fa fa-fast-backward"></i></button>
+        <button type="button" [disabled]="!hasPrevPage" (click)="pagePrecedente()" class="btn btn-default color-blue"><i class="fa fa-step-backward"></i></button>
+        <button type="button" class="btn btn-default text-faded">Document {{page}} à {{page+10}}</button>
+        <button type="button" [disabled]="!hasNextPage" (click)="pageSuivante()" class="btn btn-default color-blue"><i class="fa fa-step-forward"></i></button>
+        <button type="button" (click)="dernierePage()" class="btn btn-default color-blue"><i style="color:#007bff;" class="fa fa-fast-forward"></i></button>
+    </div>
+</div>
 
   
 
   
 
-    <mat-tab-group animationDuration="200ms">
+    <mat-tab-group animationDuration="200ms" #tabGroup>
 
         <mat-tab label="Rendu">
 
@@ -186,7 +184,14 @@
       Veuillez vous connecter
     </div>
 </div>
+<div *ngIf="error!=''"><br>
+    
+  <div class="alert alert-danger" role="alert">
+    {{error}}
+  </div>
+</div>
 </jw-modal>
+
 
 
 

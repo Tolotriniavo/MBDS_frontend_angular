@@ -120,6 +120,11 @@ export class AssignmentsService {
       nouvelAssignment.id = a.id;
       nouvelAssignment.dateDeRendu = new Date(a.dateDeRendu);
       nouvelAssignment.rendu = a.rendu;
+      
+      nouvelAssignment.matiereId = a.matiereId;
+      nouvelAssignment.note = a.note;
+      nouvelAssignment.remarque = a.remarque;
+      nouvelAssignment.auteur = a.auteur;
 
       this.addAssignment(nouvelAssignment)
       .subscribe(reponse => {
@@ -131,18 +136,25 @@ export class AssignmentsService {
   // autre version qui permet de récupérer un subscribe une fois que tous les inserts
   // ont été effectués
   peuplerBDAvecForkJoin(): Observable<any> {
+    console.log("tafiditra ato");
     const appelsVersAddAssignment = [];
 
     assignmentsGeneres.forEach((a) => {
+      console.log("assignment"+a.matiereId);
       const nouvelAssignment = new Assignment();
 
       nouvelAssignment.id = a.id;
       nouvelAssignment.nom = a.nom;
       nouvelAssignment.dateDeRendu = new Date(a.dateDeRendu);
       nouvelAssignment.rendu = a.rendu;
+      nouvelAssignment.matiereId = a.matiereId;
+      nouvelAssignment.note = a.note;
+      nouvelAssignment.remarque = a.remarque;
 
       appelsVersAddAssignment.push(this.addAssignment(nouvelAssignment));
     });
     return forkJoin(appelsVersAddAssignment); // renvoie un seul Observable pour dire que c'est fini
   }
+
+  
 }

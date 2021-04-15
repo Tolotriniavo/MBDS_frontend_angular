@@ -33,10 +33,11 @@ export class AssignmentDetailComponent implements OnInit {
 
     console.log('Dans ngOnInit de details, id = ' + id);
     this.assignmentsService.getAssignment(id).subscribe((assignment) => {
-
+console.log("tafiditra ato"+assignment.matiereId);
       this.assignmentTransmis = assignment;
       this.matieresService.getMatiere(this.assignmentTransmis.matiereId).subscribe(
         data=>{
+          console.log("Nom matiere:"+data.nom);
           this.assignmentTransmis.nomMatiere = data.nom;
           this.assignmentTransmis.nomProf = data.nomProf;
           this.assignmentTransmis.matiereImage = data.image;

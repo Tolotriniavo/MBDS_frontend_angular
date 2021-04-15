@@ -49,6 +49,7 @@ export class AppComponent implements OnInit{
       this.authService.logOut();
 
       this.openSnackBar("Vous etes deconnectée","x");
+      this.router.navigate(["/"]);
       // on navigue vers la page d'accueil
 
     } else {
@@ -66,13 +67,10 @@ export class AppComponent implements OnInit{
   peuplerBD() {
     // version naive et simple
     //this.assignmentsService.peuplerBD();
-
+    console.log("vopitsitra");
     // meilleure version :
-    this.assignmentsService.peuplerBDAvecForkJoin()
-      .subscribe(() => {
-        console.log("LA BD A ETE PEUPLEE, TOUS LES ASSIGNMENTS AJOUTES, ON RE-AFFICHE LA LISTE");
-        this.router.navigate(["/home"], {replaceUrl:true});
-      })
+    this.assignmentsService.peuplerBD();
+      
   }
   
 }

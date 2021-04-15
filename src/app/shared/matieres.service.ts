@@ -21,7 +21,7 @@ export class MatieresService {
   }
 
   getMatiere(id:string):Observable<Matiere> {
-    return this.http.get<Matiere>(this.uri + "/" + id,{headers: new HttpHeaders({'x-access-token': localStorage.getItem("currentToken")})});
+    return this.http.get<Matiere>(this.uri + "/" + id);
   }
  
 }

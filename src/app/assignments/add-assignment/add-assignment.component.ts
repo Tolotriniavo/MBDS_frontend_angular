@@ -22,6 +22,8 @@ export class AddAssignmentComponent implements OnInit {
   matiere ='';
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
+  afficherMatiere:boolean= false;
+  matiereAafficher:Matiere;
 
   constructor(private assignmentsService:AssignmentsService,
     private matieresService:MatieresService,
@@ -37,6 +39,23 @@ export class AddAssignmentComponent implements OnInit {
     });
     this.getMatieres();
 
+  }
+
+  afficher(data:Matiere){
+    console.log("Info Matiere"+data.imageProf);
+    console.log(data.nom);
+    console.log(data.nomProf);
+    this.afficherMatiere = true;
+  }
+
+  getMatiereById(){
+    console.log("ETOO"+this.matiere);
+    this.matieresService.getMatiere(this.matiere).subscribe(
+      data=>{
+          this.matiereAafficher = data;
+          this.afficher(this.matiereAafficher);
+      }
+    );
   }
 
   onSubmit() {
@@ -58,7 +77,10 @@ export class AddAssignmentComponent implements OnInit {
         console.log(reponse.message);
 
          // et on navigue vers la page d'accueil qui affiche la liste
-         this.router.navigate(["/home"]);
+         this.router.navigate(["/home/apresInsert"]);
+        
+        
+         
       });
       
   }

@@ -49,6 +49,11 @@ const routes:Routes = [
     component:AssignmentsComponent
   },
   {
+    // idem avec  http://localhost:4200/home
+    path:"home/apresInsert",
+    component:AssignmentsComponent
+  },
+  {
     path:"add",
     component:AddAssignmentComponent
   },

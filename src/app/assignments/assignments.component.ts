@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AssignmentsService } from '../shared/assignments.service';
 import { MatieresService } from '../shared/matieres.service';
 import { Assignment } from './assignment.model';
@@ -7,17 +7,23 @@ import { Matiere} from '../matieres/matieres.model';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { ModalService } from '../_modal';
 import { Location } from '@angular/common';
+import {AfterViewChecked,AfterViewInit,  ElementRef, ViewChild} from '@angular/core';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-assignments',
   templateUrl: './assignments.component.html',
   styleUrls: ['./assignments.component.css'],
 })
-export class AssignmentsComponent implements OnInit {
+export class AssignmentsComponent implements AfterViewInit,OnInit {
+  @ViewChild('tabGroup') tabGroup;
+  @ViewChild('scrollBottom') private scrollBottom: ElementRef;
   assignments:Assignment[]=[];
   assignmentsRendu:Assignment[]=[];
   assignmentsNonRendu:Assignment[]=[];
+  previousUrl: string;
   matieres:Matiere[];
+  routeOfThePage:string;
   page: number=1;
   limit: number=10;
   totalDocs: number;
@@ -36,10 +42,54 @@ export class AssignmentsComponent implements OnInit {
   // on injecte le service de gestion des assignments
   constructor(private assignmentsService:AssignmentsService,
               private route:ActivatedRoute,
-              private router:Router,
-              private matieresService:MatieresService,public modalService:ModalService) {}
+              private router:Router,private location:Location,
+              private matieresService:MatieresService,public modalService:ModalService) {
+                router.events
+  .pipe(filter(event => event instanceof NavigationEnd))
+  .subscribe((event: NavigationEnd) => {
+    console.log('prev:', event.url);
+    this.previousUrl = event.url;
+  });
+              }
+
+ngAfterViewChecked(){
+  
+  if(localStorage.getItem("apresInsert")){
+    console.log("tafiditra etoooooooooooooooooooooooooooooooo");
+    console.log("taille"+this.assignmentsNonRendu.length);
+    setTimeout(() => {
+      
+      console.log("AIZA OAAAAAA");
+      window.scrollTo(0,document.documentElement.scrollHeight);
+     }, 2000);
+    
+  }
+  localStorage.removeItem("apresInsert");
+}
+              ngAfterViewInit() {
+                
+                if(localStorage.getItem("apresInsert")=="ok"){
+
+                  this.tabGroup.selectedIndex = 1;
+                
+                  
+                }
+                
+                
+              }
+
+              scrollToBottom(): void {
+                try {
+                    this.scrollBottom.nativeElement.scrollTop = this.scrollBottom.nativeElement.scrollHeight;
+                } catch(err) { }
+            }
+          
 
   ngOnInit() {
+
+    
+    
+    this.routeOfThePage=this.router.url;
     if(localStorage.getItem('currentToken')!=null){
       this.isConnecter = true;
     }
@@ -55,8 +105,14 @@ export class AssignmentsComponent implements OnInit {
 
       this.getMatieresAndAssignments();
     });
+
       console.log("getAssignments() du service appelé");
+
+      
+
   }
+
+  
 
   getMatieresAndAssignments(){
     this.matieresService.getMatieres().subscribe(
@@ -80,26 +136,35 @@ export class AssignmentsComponent implements OnInit {
    
   }
 
+  error:string='';
   valider(){
     console.log(this.note);
-    
-    this.assignmentsService.getAssignment(this.idDevoirAModifier).subscribe((assignment) => {
-      let assignmentTemp = assignment;
-      assignmentTemp.rendu = true;
-      assignmentTemp.note = this.note;
-      assignmentTemp.remarque = this.remarque;
-      console.log("Nom"+assignmentTemp.nom);
+    if(this.note<0 || this.note>20){
+      this.error="invalide note";
+    }
+    else{
+      
 
-      this.assignmentsService.updateAssignment(assignmentTemp)
-      .subscribe(message => {
-        console.log(message);
+      this.assignmentsService.getAssignment(this.idDevoirAModifier).subscribe((assignment) => {
+        let assignmentTemp = assignment;
+        assignmentTemp.rendu = true;
+        assignmentTemp.note = this.note;
+        assignmentTemp.remarque = this.remarque;
+        console.log("Nom"+assignmentTemp.nom);
   
-        // et on navigue vers la page d'accueil
-       window.location.reload();
-
-      })
+        this.assignmentsService.updateAssignment(assignmentTemp)
+        .subscribe(message => {
+          console.log(message);
     
-    });
+          // et on navigue vers la page d'accueil
+         window.location.reload();
+  
+        })
+      
+      });
+    }
+    
+    
   }
    
 
@@ -111,7 +176,7 @@ export class AssignmentsComponent implements OnInit {
       this.assignmentsRendu = [];
       this.assignmentsNonRendu = [];
       assignmentsTemp = data.docs;
-      console.log("taille"+assignmentsTemp.length);
+      
       for(let i=0;i<assignmentsTemp.length;i++){
         
           for(let x=0;x<matieres.length;x++){
@@ -128,6 +193,7 @@ export class AssignmentsComponent implements OnInit {
           }
           else{
             this.assignmentsNonRendu.push(assignmentsTemp[i]);
+            
           }
       }
       
@@ -140,6 +206,19 @@ export class AssignmentsComponent implements OnInit {
       this.prevPage = data.prevPage;
       this.hasNextPage = data.hasNextPage;
       this.nextPage = data.nextPage;
+      
+
+      if(this.routeOfThePage.includes("apresInsert")){
+        this.dernierePage();
+
+        localStorage.setItem("apresInsert","ok");
+        
+        
+        
+      }
+      if(localStorage.getItem("apresItem")){
+
+      }
       console.log("données reçues");
     });
   }
@@ -197,7 +276,7 @@ export class AssignmentsComponent implements OnInit {
     });
   }
 
-  dernierePage() {
+  public dernierePage() {
     this.router.navigate(['/home'], {
       queryParams: {
         page:this.totalPages,
