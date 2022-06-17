@@ -2,7 +2,6 @@
 
 #Développeurs:
 	- RALAIARISOA Tolotriniavo Hubert N°29
-	- LALA THONG SANG Irchad N°09
 
 #Données:
 	- 500 assignments
